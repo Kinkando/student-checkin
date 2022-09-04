@@ -1,1 +1,64 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@100&display=swap');
+:root {
+    --primary-color: #42515E;
+    --sub-primary-color: #35414B;
+    --secondary-color: rgb(246, 246, 246);
+    --sidebar-width: 240px;
+    --sidebar-header-height: 60px;
+    --sidebar-item-height: 30px;
+    --topbar-height: 60px;
+    --transition-style: 0.4s ease;
+    --fs-h1: 36px;
+    --fs-h2: 32px;
+    --fs-h3: 28px;
+    --fs-h4: 24px;
+    --fs-h5: 18px;
+    --fs-h6: 14px;
+    /* 
+    --fs-h1: 36px;
+    --fs-h2: 32px;
+    --fs-h3: 28px;
+    --fs-h4: 24px;
+    --fs-h5: 20px;
+    --fs-h6: 18px; 
+    */
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Prompt', sans-serif;
+    font-weight: bold;
+    font-size: var(--fs-h6);
+}
+
+body {
+    overflow-x: hidden;
+}
+
+*::-webkit-scrollbar {
+    display: block;
+    width: 16px;
+}
+
+*::-webkit-scrollbar-button {
+    display: none;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: #00000000;
+}
+
+*::-webkit-scrollbar-track-piece {
+    background-color: #00000000;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #00000040;
+    border: 1px solid #ffffff40;
+    border-radius: 24px;
+}

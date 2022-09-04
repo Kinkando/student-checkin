@@ -1,0 +1,19 @@
+<div [ngClass]="'sidebar-wrapper' + (isActive ? ' active' : ' inactive')">
+    <div class="sidebar-header">
+        MY SCHOOL
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sidebar-list mt-2" *ngFor="let sidebar of sidebars">
+        <div class="sidebar-topic">
+            {{ sidebar.header }}
+        </div>
+        <a *ngFor="let item of sidebar.items" [ngClass]=" currentPage === item.routerLink ? 'sidebar-item active' : 'sidebar-item' " [href]="item.routerLink">
+            <div class="sidebar-item-icon">
+                <i class="{{ item.icon }}"></i>
+            </div>
+            <div class="sidebar-item-text">
+                {{ item.text }}
+            </div>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+.topbar {
+    height: var(--topbar-height);
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    font-size: var(--fs-h3);
+}
+
+#menu {
+    display: none;
+    position: absolute;
+    right: 20px;
+    border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+    #menu {
+        display: block;
+    }
+}

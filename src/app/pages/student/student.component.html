@@ -1,0 +1,83 @@
+<app-sidebar></app-sidebar>
+<div class="student-page" id="main">
+    <app-topbar></app-topbar>
+
+    <body class="p-4">
+        <mat-card class="p-4 mat-elevation-z5">
+
+            <div class="form-row">
+                <mat-form-field appearance="outline" class="me-2">
+                    <mat-label>ระดับชั้น</mat-label>
+                    <mat-select [(ngModel)]="grade" (ngModelChange)="selectGrade()">
+                        <mat-option *ngFor="let grade of grades" [value]="grade.Value">
+                            {{ grade.Name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="me-2">
+                    <mat-label>ห้อง</mat-label>
+                    <mat-select [(ngModel)]="room" (ngModelChange)="selectRoom()">
+                        <mat-option *ngFor="let room of rooms" [value]="room.Value">
+                            {{ room.Name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="full-width" id="search" appearance="outline" floatLabel="never">
+                    <mat-label>ค้นหา</mat-label>
+                    <input matInput (keyup)="applyFilter($event)">
+                </mat-form-field>
+            </div>
+
+            <div class="mat-elevation-z1">
+                <mat-table [dataSource]="dataSource" matSort>
+                    <ng-container *ngFor="let text of columns.text" [matColumnDef]="text.id">
+                        <!-- [style]="'flex: 0 0 ' + (64/columns.text.length) + '%;'" -->
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ text.name }} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [ngClass]="setLabelColor(row.StatusID)">
+                            <div class="w-100 p-1" *ngIf="isLoading">
+                                <ngx-skeleton-loader count="1" appearance="line" animation="pulse"></ngx-skeleton-loader>
+                            </div>
+                            <div *ngIf="!isLoading">
+                                {{ getStudent(row, text.id) }}
+                            </div>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container *ngFor="let button of columns.button" [matColumnDef]="button.id">
+                        <!-- [style]="'flex: 0 0 ' + (36/columns.button.length) + '%;'" -->
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ button.name }} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [ngClass]="setLabelColor(row.StatusID)">
+                            <div class="w-100 p-1" *ngIf="isLoading">
+                                <ngx-skeleton-loader count="1" appearance="line" animation="pulse"></ngx-skeleton-loader>
+                            </div>
+                            <div *ngIf="!isLoading">
+                                <button mat-raised-button [color]="button.color" (click)="checkIn(row.Ref, button.statusID)">{{ button.name }}</button>
+                            </div>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- 
+                    <tr class="mat-row">
+                        <td class="mat-cell text-center" *matNoDataRow [colSpan]="displayedColumns.length">
+                            No data matching the filter.
+                        </td>
+                    </tr> 
+                    -->
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                </mat-table>
+
+                <div class="text-center w-100" *ngIf="(dataSource.filteredData.length == 0 || dataSource.data.length === 0) && !isLoading">
+                    <p class="p-2">ไม่พบข้อมูล</p>
+                    <hr>
+                </div>
+
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [disabled]="isLoading"></mat-paginator>
+        </mat-card>
+    </body>
+</div>
