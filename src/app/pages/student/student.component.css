@@ -16,7 +16,7 @@
 
 body {
     background-color: var(--secondary-color);
-    height: calc(100vh - var(--topbar-height))
+    min-height: calc(100vh - var(--topbar-height));
 }
 
 .mat-row:hover .mat-cell.check-present {
