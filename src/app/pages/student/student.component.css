@@ -49,22 +49,6 @@ body {
     background-color: #7e7e7e;
 }
 
-.check-present {
-    background-color: #cbffd7;
-}
-
-.check-absent {
-    background-color: rgb(255, 227, 227);
-}
-
-.check-business {
-    background-color: rgb(255, 255, 213);
-}
-
-.check-illness {
-    background-color: rgb(224, 224, 224);
-}
-
 @media (max-width: 768px) {
     .student-page {
         left: 0;

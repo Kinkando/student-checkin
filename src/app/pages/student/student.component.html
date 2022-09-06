@@ -26,7 +26,8 @@
 
                 <mat-form-field class="full-width" id="search" appearance="outline" floatLabel="never">
                     <mat-label>ค้นหา</mat-label>
-                    <input matInput (keyup)="applyFilter($event)">
+                    <input matInput="search" (keyup)="applyFilter($event)">
+                    <!-- <mat-icon matSuffix>search</mat-icon> -->
                 </mat-form-field>
             </div>
 
@@ -69,7 +70,7 @@
                 </div>
 
             </div>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [disabled]="isLoading"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" [disabled]="isLoading"></mat-paginator>
         </mat-card>
     </body>
 </div>

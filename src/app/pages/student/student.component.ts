@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { StudentService, Opt, Student, statusName, getStudent } from '../../services/student.service';
 
@@ -11,9 +12,10 @@ import { StudentService, Opt, Student, statusName, getStudent } from '../../serv
   styleUrls: ['./student.component.css']
 })
 export class StudentComponent implements OnInit {
-  displayedColumns: string[] = [];
-  dataSource: MatTableDataSource<Student> = new MatTableDataSource();
-  columns = {
+  public displayedColumns: string[] = [];
+  public pageSizeOptions: number[] = [5, 10, 25, 100];
+  public dataSource: MatTableDataSource<Student> = new MatTableDataSource();
+  public columns = {
     text: [
       {id: 'No', name: 'เลขที่', style: 'flex: 0 0 80px;', ratio: 8},
       {id: 'Code', name: 'รหัส', style: 'flex: 0 0 80px;', ratio: 8},
@@ -28,6 +30,7 @@ export class StudentComponent implements OnInit {
     ]  
   }
   private _itemPerPageLabel: string = "Items per page";
+  private _snackBarVertialPosition: MatSnackBarVerticalPosition = "top";
   
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
@@ -45,7 +48,7 @@ export class StudentComponent implements OnInit {
   private _grade = new Subject();
   private _room = new Subject();
 
-  constructor(private _studentService: StudentService) { }
+  constructor(private _studentService: StudentService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     for (let object of this.columns.text) {this.displayedColumns.push(object.id)}
@@ -74,7 +77,7 @@ export class StudentComponent implements OnInit {
     })
   }
 
-  applyFilter(event: any) {
+  public applyFilter(event: any) {
     this._filter = event.target!.value.trim().toLowerCase();
     if(!this.isLoading) {
       this.dataSource.filter = this._filter;
@@ -98,48 +101,53 @@ export class StudentComponent implements OnInit {
     }
   }
   
-  selectGrade() {
+  public selectGrade() {
     this.skeletonLoad();
     // this._grade.next("");
     this.delay(this._grade);
   }
 
-  selectRoom() {
+  public selectRoom() {
     this.skeletonLoad();
     // this._room.next("");
     this.delay(this._room);
   }
 
-  skeletonLoad() {
+  public skeletonLoad() {
     this.isLoading = true;
     this.dataSource = new MatTableDataSource();
-    for(let i=0; i<5; i++) {
+    for(let i=0; i<this.pageSizeOptions[0]; i++) {
       this.dataSource.data.push(<Student>{});
     }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  delay(subject: any) {
+  public delay(subject: any) {
     setTimeout(function(subject: any) {
       subject.next("");
     }, 300, subject)
   }
 
-  checkIn(ref: number, statusID: number) {
+  public checkIn(ref: number, statusID: number) {
     for(let student of this.students) {
       if(student.Ref === ref) {
         student.StatusID = statusID
         student.StatusName = statusName.get(statusID)!
+        this._snackBar.open(`${student.FirstName} ${student.LastName} ${student.StatusName}`, undefined, {
+          duration: 1000,
+          verticalPosition: this._snackBarVertialPosition,
+          panelClass: [this.setLabelColor(student.StatusID)],
+        });
       }
     }
   }
 
-  getStudent(student: Student, key: string) {
+ public getStudent(student: Student, key: string) {
     return getStudent(student, key);
   }
 
-  setLabelColor(statusID: number): string {
+  public setLabelColor(statusID: number): string {
     switch(statusID) {
       case 1: return "check-present";
       case 2: return "check-absent";

@@ -17,6 +17,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider'
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 // Components
@@ -57,6 +58,7 @@ import { StudentService } from './services/student.service';
     MatSortModule,
     MatTableModule,
     MatDividerModule,
+    MatSnackBarModule,
     NgxSkeletonLoaderModule,
   ],
   providers: [
