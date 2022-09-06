@@ -15,16 +15,16 @@ export class StudentComponent implements OnInit {
   dataSource: MatTableDataSource<Student> = new MatTableDataSource();
   columns = {
     text: [
-      {id: 'No', name: 'เลขที่', style: 'flex: 0 0 80px;'},
-      {id: 'Code', name: 'รหัส', style: 'flex: 0 0 80px;'},
-      {id: 'Name', name: 'ชื่อ-สกุล', style: 'flex: 0 0 calc(100% - (4 * 85px + 3 * 80px));'},
-      {id: 'StatusName', name: 'สถานะ', style: 'flex: 0 0 80px;'},
+      {id: 'No', name: 'เลขที่', style: 'flex: 0 0 80px;', ratio: 8},
+      {id: 'Code', name: 'รหัส', style: 'flex: 0 0 80px;', ratio: 8},
+      {id: 'Name', name: 'ชื่อ-สกุล', style: 'flex: 0 0 calc(100% - (4 * 85px + 3 * 80px));', ratio: 44},
+      {id: 'StatusName', name: 'สถานะ', style: 'flex: 0 0 80px;', ratio: 8},
     ],
     button: [
-      {id: 'Present', name: 'มา', statusID: 1, color: 'success', style: 'flex: 0 0 85px;'},
-      {id: 'Absent', name: 'ขาด', statusID: 2, color: 'warn', style: 'flex: 0 0 85px;'},
-      {id: 'Business', name: 'ลากิจ', statusID: 3, color: 'accent', style: 'flex: 0 0 85px;'},
-      {id: 'Illness', name: 'ลาป่วย', statusID: 4, color: 'disabled', style: 'flex: 0 0 85px;'},
+      {id: 'Present', name: 'มา', statusID: 1, color: 'success', style: 'flex: 0 0 85px;', ratio: 8},
+      {id: 'Absent', name: 'ขาด', statusID: 2, color: 'warn', style: 'flex: 0 0 85px;', ratio: 8},
+      {id: 'Business', name: 'ลากิจ', statusID: 3, color: 'accent', style: 'flex: 0 0 85px;', ratio: 8},
+      {id: 'Illness', name: 'ลาป่วย', statusID: 4, color: 'disabled', style: 'flex: 0 0 85px;', ratio: 8},
     ]  
   }
   private _itemPerPageLabel: string = "Items per page";

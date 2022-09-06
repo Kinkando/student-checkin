@@ -68,7 +68,7 @@ export const getStudent = (student: Student, key: string): any => {
     case "RoomRef": return student.RoomRef;
     case "RoomName": return student.RoomName;
     case "No": return student.No;
-    case "Code": return student.Code;
+    case "Code": return Number(student.Code);
     case "FirstName": return student.FirstName;
     case "LastName": return student.LastName;
     case "Title": return student.Title;
