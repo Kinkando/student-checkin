@@ -27,16 +27,15 @@
                 <mat-form-field class="full-width" id="search" appearance="outline" floatLabel="never">
                     <mat-label>ค้นหา</mat-label>
                     <input matInput="search" (keyup)="applyFilter($event)">
-                    <!-- <mat-icon matSuffix>search</mat-icon> -->
+                    <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
             </div>
 
             <div class="mat-elevation-z1">
                 <mat-table [dataSource]="dataSource" matSort>
                     <ng-container *ngFor="let text of columns.text" [matColumnDef]="text.id">
-                        <!-- [style]="'flex: 0 0 ' + (64/columns.text.length) + '%;'" -->
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [style]="'flex: 0 0 ' + (text.ratio) + '%;'"> {{ text.name }} </mat-header-cell>
-                        <mat-cell *matCellDef="let row" [ngClass]="setLabelColor(row.StatusID)" [style]="'flex: 0 0 ' + (text.ratio) + '%;'">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [style]="text.style"> {{ text.name }} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [ngClass]="setLabelColor(row.StatusID)" [style]="text.style">
                             <div class="w-100 p-1" *ngIf="isLoading">
                                 <ngx-skeleton-loader count="1" appearance="line" animation="pulse"></ngx-skeleton-loader>
                             </div>
@@ -47,9 +46,8 @@
                     </ng-container>
 
                     <ng-container *ngFor="let button of columns.button" [matColumnDef]="button.id">
-                        <!-- [style]="'flex: 0 0 ' + (36/columns.button.length) + '%;'" -->
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [style]="'flex: 0 0 ' + (button.ratio) + '%;'"> {{ button.name }} </mat-header-cell>
-                        <mat-cell *matCellDef="let row" [ngClass]="setLabelColor(row.StatusID)" [style]="'flex: 0 0 ' + (button.ratio) + '%;'">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [style]="button.style"> {{ button.name }} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" [ngClass]="setLabelColor(row.StatusID)" [style]="button.style">
                             <div class="w-100 p-1" *ngIf="isLoading">
                                 <ngx-skeleton-loader count="1" appearance="line" animation="pulse"></ngx-skeleton-loader>
                             </div>

@@ -49,6 +49,22 @@ body {
     background-color: #7e7e7e;
 }
 
+.mat-raised-button.mat-success:hover {
+    background-color: #188230;
+}
+
+.mat-raised-button.mat-warn:hover {
+    background-color: #bb0000;
+}
+
+.mat-raised-button.mat-accent:hover {
+    background-color: #ecb32f;
+}
+
+.mat-raised-button.mat-disabled:hover {
+    background-color: #4e4e4e;
+}
+
 @media (max-width: 768px) {
     .student-page {
         left: 0;
