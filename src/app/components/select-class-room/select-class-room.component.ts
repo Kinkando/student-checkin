@@ -36,7 +36,7 @@ export class SelectClassRoomComponent implements OnInit {
     })
 
     this._room.pipe().subscribe(room => {
-      this._studentService.getStudent(room).subscribe(students => this._updateStudent(students))
+      this._studentService.getStudent(room).subscribe(students => this.studentList.emit(students))
     })
 
     this._studentService.getGrade().subscribe(grade => {
@@ -52,9 +52,5 @@ export class SelectClassRoomComponent implements OnInit {
 
   public selectRoom() {
     this._room.next(this.room);
-  }
-
-  private _updateStudent(students: Student[]) {
-    this.studentList.emit(students);
   }
 }

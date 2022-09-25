@@ -14,6 +14,10 @@ export class StudentComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
 
+  private _itemPerPageLabel: string = "Items per page";
+  private _snackBarVertialPosition: MatSnackBarVerticalPosition = "top";
+  
+  public filter: string = "";
   public isLoading: boolean = true;
   public students: Student[] = [];
   public columnNames: string[] = [];
@@ -33,10 +37,6 @@ export class StudentComponent implements OnInit, AfterViewInit {
       {id: 'Illness', name: 'ลาป่วย', statusID: 4, color: 'disabled', style: 'flex: 0 0 85px;', ratio: 8},
     ]  
   }
-
-  private _itemPerPageLabel: string = "Items per page";
-  private _snackBarVertialPosition: MatSnackBarVerticalPosition = "top";
-  private _filter: string = "";
   
   private static DELAY_LOADING: number = 300;
   private static DELAY_MODAL: number = 1000;
@@ -52,10 +52,10 @@ export class StudentComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator
   }
 
-  public applyFilter(event: any) {
-    this._filter = event.target!.value.trim().toLowerCase();
+  public searchFilter(text: string): void {
+    this.filter = text;
     if(!this.isLoading) {
-      this.dataSource.filter = this._filter;
+      this.dataSource.filter = this.filter;
     }
   }
 
@@ -65,7 +65,7 @@ export class StudentComponent implements OnInit, AfterViewInit {
       this.dataSource = new MatTableDataSource(students);
       this._cdr.detectChanges();
       this.dataSource.sortingDataAccessor = (item, property) => getStudent(item, property);
-      this.dataSource.filter = this._filter;
+      this.dataSource.filter = this.filter;
     } else {
       this.dataSource = new MatTableDataSource();
       this._cdr.detectChanges();

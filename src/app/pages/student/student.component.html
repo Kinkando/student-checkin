@@ -10,8 +10,10 @@
 
                 <mat-form-field class="full-width" id="search" appearance="outline" floatLabel="never">
                     <mat-label>ค้นหา</mat-label>
-                    <input matInput="search" (keyup)="applyFilter($event)">
-                    <mat-icon matSuffix>search</mat-icon>
+                    <input matInput="search" [(ngModel)]="filter" (ngModelChange)="searchFilter(filter)">
+                    <mat-icon matSuffix (click)="searchFilter(filter ? '' : filter)">
+                        {{ filter.length === 0 ? 'search' : 'close' }}
+                    </mat-icon>
                 </mat-form-field>
             </div>
 
