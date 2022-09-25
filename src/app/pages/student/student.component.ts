@@ -74,11 +74,11 @@ export class StudentComponent implements OnInit {
   }
 
   public updateStudent(students: Student[]) {
-    this.skeletonLoad();
-    this.delay(students);
+    this._skeletonLoad();
+    this._delay(students);
   }
   
-  public skeletonLoad() {
+  private _skeletonLoad() {
     this.isLoading = true;
     this.dataSource = new MatTableDataSource();
     this._cdr.detectChanges();
@@ -89,7 +89,7 @@ export class StudentComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  public delay(students: Student[]) {
+  private _delay(students: Student[]) {
     setTimeout(() => this._updateDataSource(students), StudentComponent.DELAY_LOADING);
   }
 
