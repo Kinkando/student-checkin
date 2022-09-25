@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Opt, Student, StudentService } from 'src/app/services/student.service';
 
 @Component({
@@ -11,46 +11,50 @@ export class SelectClassRoomComponent implements OnInit {
   @Output() studentList = new EventEmitter<Student[]>();
 
   public grades: Opt[] = [];
-  public grade: number = 1;
   public rooms: Opt[] = [];
-  public room: number = 1;
-  
-  private _grade = new Subject<number>();
-  private _room = new Subject<number>();
-  
+  public $grade = new BehaviorSubject<number>(1);
+  public $room = new BehaviorSubject<number>(1);
+
   constructor(private _studentService: StudentService) { }
 
   ngOnInit(): void {
-    this._grade.pipe().subscribe(grade => {
-      this._studentService.getRoomByGrade(grade).subscribe(rooms => {
-        if (this.rooms.length > 0) {
-          let roomName = this.rooms.find(room => room.Value === this.room)!.Name;
-          let room = rooms.find(room => room.Name === roomName)
-          this.room = room ? room.Value : rooms[0].Value;
-        } else {
-          this.room = rooms[0].Value;
-        }
-        this.rooms = rooms;
-        this._room.next(this.room);
-      })
-    })
-
-    this._room.pipe().subscribe(room => {
-      this._studentService.getStudent(room).subscribe(students => this.studentList.emit(students))
-    })
-
     this._studentService.getGrade().subscribe(grade => {
       this.grades = grade;
-      this.grade = grade[0].Value;
-      this._grade.next(this.grade);
+      this.$grade.next(grade[0].Value);
+    })
+
+    this.$grade.pipe().subscribe(grade => {
+      this._studentService.getRoomByGrade(grade).subscribe(rooms => {
+        let room: number;
+        if (this.rooms.length > 0) {
+          let roomName = this.rooms.find(room => room.Value === this.room)!.Name;
+          let roomFind = rooms.find(room => room.Name === roomName)
+          room = roomFind ? roomFind.Value : rooms[0].Value;
+        } else {
+          room = rooms[0].Value;
+        }
+        this.rooms = rooms;
+        this.$room.next(room);
+      })
+    })
+    this.$room.pipe().subscribe(room => {
+      this._studentService.getStudent(room).subscribe(students => this.studentList.emit(students))
     })
   }
 
-  public selectGrade() {
-    this._grade.next(this.grade);
+  public get grade(): number {
+    return this.$grade.getValue()
   }
 
-  public selectRoom() {
-    this._room.next(this.room);
+  public set grade(grade: number) {
+    this.$grade.next(grade);
+  }
+
+  public get room(): number {
+    return this.$room.getValue()
+  }
+
+  public set room(room: number) {
+    this.$room.next(room);
   }
 }

@@ -1,6 +1,6 @@
 <mat-form-field appearance="outline" class="me-2">
     <mat-label>ระดับชั้น</mat-label>
-    <mat-select [(ngModel)]="grade" (ngModelChange)="selectGrade()">
+    <mat-select [(ngModel)]="grade">
         <mat-option *ngFor="let grade of grades" [value]="grade.Value">
             {{ grade.Name }}
         </mat-option>
@@ -9,7 +9,7 @@
 
 <mat-form-field appearance="outline" class="me-2">
     <mat-label>ห้อง</mat-label>
-    <mat-select [(ngModel)]="room" (ngModelChange)="selectRoom()">
+    <mat-select [(ngModel)]="room">
         <mat-option *ngFor="let room of rooms" [value]="room.Value">
             {{ room.Name }}
         </mat-option>
