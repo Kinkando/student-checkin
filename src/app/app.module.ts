@@ -30,6 +30,7 @@ import { RoomComponent } from './pages/room/room.component';
 
 // Services
 import { StudentService } from './services/student.service';
+import { SelectClassRoomComponent } from './components/select-class-room/select-class-room.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { StudentService } from './services/student.service';
     RoomComponent,
     SidebarComponent,
     TopbarComponent,
+    SelectClassRoomComponent,
   ],
   imports: [
     BrowserModule,

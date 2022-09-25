@@ -6,23 +6,7 @@
         <mat-card class="p-4 mat-elevation-z5">
 
             <div class="form-row">
-                <mat-form-field appearance="outline" class="me-2">
-                    <mat-label>ระดับชั้น</mat-label>
-                    <mat-select [(ngModel)]="grade" (ngModelChange)="selectGrade()">
-                        <mat-option *ngFor="let grade of grades" [value]="grade.Value">
-                            {{ grade.Name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="me-2">
-                    <mat-label>ห้อง</mat-label>
-                    <mat-select [(ngModel)]="room" (ngModelChange)="selectRoom()">
-                        <mat-option *ngFor="let room of rooms" [value]="room.Value">
-                            {{ room.Name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <app-select-class-room (studentList)="updateStudent($event)"></app-select-class-room>
 
                 <mat-form-field class="full-width" id="search" appearance="outline" floatLabel="never">
                     <mat-label>ค้นหา</mat-label>
@@ -57,8 +41,8 @@
                         </mat-cell>
                     </ng-container>
 
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-header-row *matHeaderRowDef="columnNames"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: columnNames;"></mat-row>
 
                 </mat-table>
 

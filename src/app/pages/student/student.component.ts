@@ -1,18 +1,22 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
-import { StudentService, Opt, Student, statusName, getStudent } from '../../services/student.service';
+import { Student, statusName, getStudent } from '../../services/student.service';
 
 @Component({
   selector: 'app-student',
   templateUrl: './student.component.html',
   styleUrls: ['./student.component.css']
 })
-export class StudentComponent implements OnInit {
-  public displayedColumns: string[] = [];
+export class StudentComponent implements OnInit, AfterViewInit {  
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
+  @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
+
+  public isLoading: boolean = true;
+  public students: Student[] = [];
+  public columnNames: string[] = [];
   public pageSizeOptions: number[] = [5, 10, 25, 100];
   public dataSource: MatTableDataSource<Student> = new MatTableDataSource();
   public columns = {
@@ -29,52 +33,23 @@ export class StudentComponent implements OnInit {
       {id: 'Illness', name: 'ลาป่วย', statusID: 4, color: 'disabled', style: 'flex: 0 0 85px;', ratio: 8},
     ]  
   }
+
   private _itemPerPageLabel: string = "Items per page";
   private _snackBarVertialPosition: MatSnackBarVerticalPosition = "top";
-  
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
-  @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
-
-  public isLoading: boolean = true;
   private _filter: string = "";
+  
+  private static DELAY_LOADING: number = 300;
+  private static DELAY_MODAL: number = 1000;
 
-  public grades: Opt[] = [];
-  public grade: number = 1;
-  public rooms: Opt[] = [];
-  public room: number = 1;
-  public students: Student[] = [];
-  public student: Student = <Student>{};
-
-  private _grade = new Subject();
-  private _room = new Subject();
-
-  constructor(private _studentService: StudentService, private _snackBar: MatSnackBar) { }
+  constructor(private _cdr: ChangeDetectorRef, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    for (let object of this.columns.text) {this.displayedColumns.push(object.id)}
-    for (let object of this.columns.button) {this.displayedColumns.push(object.id)}
+    for (let object of this.columns.text) {this.columnNames.push(object.id)}
+    for (let object of this.columns.button) {this.columnNames.push(object.id)}
+  }
 
-    this._grade.pipe().subscribe(res => {
-      this._studentService.getRoomByGrade(this.grade).subscribe(res => {
-        this.rooms = res;
-        this.room = res[0].Value;
-        this._room.next('');
-      })
-    })
-
-    this._room.pipe().subscribe(res => {
-      this._studentService.getStudent(this.room).subscribe(res => {
-        this.students = res;
-        this.isLoading = false;
-        this._updateDataSource(res);
-      })
-    })
-
-    this.skeletonLoad();
-    this._studentService.getGrade().subscribe(res => {
-      this.grades = res;
-      this._grade.next("");
-    })
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator
   }
 
   public applyFilter(event: any) {
@@ -85,37 +60,32 @@ export class StudentComponent implements OnInit {
   }
 
   private _updateDataSource(students: Student[]) {
+    this.students = students;
     if (students != undefined) {
       this.dataSource = new MatTableDataSource(students);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.paginator._intl.itemsPerPageLabel = this._itemPerPageLabel;
-      this.dataSource.sort = this.sort;
+      this._cdr.detectChanges();
       this.dataSource.sortingDataAccessor = (item, property) => getStudent(item, property);
       this.dataSource.filter = this._filter;
     } else {
       this.dataSource = new MatTableDataSource();
+      this._cdr.detectChanges();
       this.paginator.initialized;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.paginator._intl.itemsPerPageLabel = this._itemPerPageLabel;
-      this.dataSource.sort = this.sort;
     }
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator._intl.itemsPerPageLabel = this._itemPerPageLabel;
+    this.dataSource.sort = this.sort;
+    this.isLoading = false;
+  }
+
+  public updateStudent(students: Student[]) {
+    this.skeletonLoad();
+    this.delay(students);
   }
   
-  public selectGrade() {
-    this.skeletonLoad();
-    // this._grade.next("");
-    this.delay(this._grade);
-  }
-
-  public selectRoom() {
-    this.skeletonLoad();
-    // this._room.next("");
-    this.delay(this._room);
-  }
-
   public skeletonLoad() {
     this.isLoading = true;
     this.dataSource = new MatTableDataSource();
+    this._cdr.detectChanges();
     for(let i=0; i<this.pageSizeOptions[0]; i++) {
       this.dataSource.data.push(<Student>{});
     }
@@ -123,10 +93,8 @@ export class StudentComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  public delay(subject: any) {
-    setTimeout(function(subject: any) {
-      subject.next("");
-    }, 300, subject)
+  public delay(students: Student[]) {
+    setTimeout(() => this._updateDataSource(students), StudentComponent.DELAY_LOADING);
   }
 
   public checkIn(ref: number, statusID: number) {
@@ -134,8 +102,9 @@ export class StudentComponent implements OnInit {
       if(student.Ref === ref) {
         student.StatusID = statusID
         student.StatusName = statusName.get(statusID)!
-        this._snackBar.open(`${student.FirstName} ${student.LastName} ${student.StatusName}`, undefined, {
-          duration: 1000,
+        let toast = `${student.FirstName} ${student.LastName} ${student.StatusName}`;
+        this._snackBar.open(toast, undefined, {
+          duration: StudentComponent.DELAY_MODAL,
           verticalPosition: this._snackBarVertialPosition,
           panelClass: [this.setLabelColor(student.StatusID)],
         });
