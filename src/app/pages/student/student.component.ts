@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,13 +10,16 @@ import { Student, statusName, getStudent } from '../../services/student.service'
   templateUrl: './student.component.html',
   styleUrls: ['./student.component.css']
 })
-export class StudentComponent implements OnInit, AfterViewInit {  
+export class StudentComponent implements OnInit {  
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatSort, { static: false }) sort: MatSort = new MatSort();
 
-  private _itemPerPageLabel: string = "Items per page";
   private _snackBarVertialPosition: MatSnackBarVerticalPosition = "top";
+  private _itemPerPageLabel: string = "Items per page";
   
+  private static DELAY_LOADING: number = 300;
+  private static DELAY_MODAL: number = 1000;
+
   public filter: string = "";
   public isLoading: boolean = true;
   public students: Student[] = [];
@@ -37,19 +40,12 @@ export class StudentComponent implements OnInit, AfterViewInit {
       {id: 'Illness', name: 'ลาป่วย', statusID: 4, color: 'disabled', style: 'flex: 0 0 85px;', ratio: 8},
     ]  
   }
-  
-  private static DELAY_LOADING: number = 300;
-  private static DELAY_MODAL: number = 1000;
 
   constructor(private _cdr: ChangeDetectorRef, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     for (let object of this.columns.text) {this.columnNames.push(object.id)}
     for (let object of this.columns.button) {this.columnNames.push(object.id)}
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator
   }
 
   public searchFilter(text: string): void {
